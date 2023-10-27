@@ -19,12 +19,15 @@ public class ButtonTrigger : MonoBehaviour, IEndDragHandler, IBeginDragHandler
         _dragDirection = eventData.position - _position;
 
         _dragDirection = _dragDirection.normalized;
-        
-        _dragDirection.x = Mathf.Abs(_dragDirection.x) >= 0.8f ? Mathf.Sign(_dragDirection.x) : 0;
-        _dragDirection.y = Mathf.Abs(_dragDirection.y) >= 0.8f ? Mathf.Sign(_dragDirection.y) : 0;
 
-        Debug.Log(_dragDirection);
-        GameController.Instance.GetSquarePosition(_buttonNumber, _dragDirection.normalized);
+        if ( Mathf.Abs(_dragDirection.x) >= 0.8f)
+        {
+            GameController.Instance.GetSquarePosition(_buttonNumber, Mathf.Sign(_dragDirection.x) >= 1 ? GameController.EDirection.Right: GameController.EDirection.Left);
+        }
+        else if ( Mathf.Abs(_dragDirection.y) >= 0.8f)
+        {
+            GameController.Instance.GetSquarePosition(_buttonNumber, Mathf.Sign(_dragDirection.y) >= 1 ? GameController.EDirection.Top: GameController.EDirection.Bottom);
+        }
     }
 
     public void OnBeginDrag(PointerEventData eventData)

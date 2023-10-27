@@ -43,14 +43,14 @@ public class GameController : MonoBehaviour
             var squarePosition = i + 1;
             _buttons[i].onClick.AddListener(() =>
             {
-                GetSquarePosition(squarePosition, Vector2.zero);
+                GetSquarePosition(squarePosition);
             });
         }
 
         Random();
     }
 
-    public void GetSquarePosition(Int32 numberOfClicked, Vector2 direction)
+    public void GetSquarePosition( Int32 numberOfClicked, EDirection direction = EDirection.None )
     {
         var index = _number.IndexOf(numberOfClicked);
 
@@ -59,37 +59,24 @@ public class GameController : MonoBehaviour
 
         Int32 top = 0, bottom = 0, right = 0, left = 0;
 
-        if (direction == Vector2.zero)
+        if (direction == EDirection.None )
         {
             top = y > 0 ? _number[index - 4] : 0;
             bottom = y < 3 ? _number[index + 4] : 0;
 
             right = x < 3 ? _number[index + 1] : 0;
-            left = x > 0  ? _number[index - 1] : 0;
+            left = x > 0  ? _number[index - 1] : 0;            
         }
         else
         {
-            if (direction.x == 1)
+            switch (direction)
             {
-                right = x < 3 ? _number[index + 1] : 0;
-
-            }
-            else if (direction.x == -1)
-            {
-                left = x > 0  ? _number[index - 1] : 0;
-            }
-            else if (direction.y == 1)
-            {
-                top = y > 0 ? _number[index - 4] : 0;
-
-            }
-            else if(direction.y == -1)
-            {
-                bottom = y < 3 ? _number[index + 4] : 0;
+                case EDirection.Left: left = x > 0  ? _number[index - 1] : 0; break;
+                case EDirection.Right: right = x < 3 ? _number[index + 1] : 0; break;
+                case EDirection.Top: top = y > 0 ? _number[index - 4] : 0; break;
+                case EDirection.Bottom: bottom = y < 3 ? _number[index + 4] : 0; break;
             }
         }
-
-
         
         if (top == 16)         SwapNumbers(index, index - 4, numberOfClicked, new Vector2(0f, 250f));
         else if (bottom == 16) SwapNumbers(index, index + 4, numberOfClicked, new Vector2(0f, -250f));
@@ -114,7 +101,7 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < 300; i++)
         {
             var rand = UnityEngine.Random.Range(1, _buttons.Count);
-            GetSquarePosition(rand, Vector2.zero);
+            GetSquarePosition(rand);
         }
         _isShuffled = true;
     }
@@ -177,5 +164,14 @@ public class GameController : MonoBehaviour
         }
 
         _isMusicTurnedOn = !_isMusicTurnedOn;
+    }
+    
+    public enum EDirection
+    {
+        None,
+        Left,
+        Right,
+        Top,
+        Bottom
     }
 }
